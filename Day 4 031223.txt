@@ -352,8 +352,9 @@ end
 sh ntp association
 
 5 Lab in april
-1 dhcp
+1 dhcp: with linux1, linux2, linux3: vladan.fr
 2 acl, extended
+  acl, standard: block 3 pornsites.
 3 ssh lab
 4 NAT
 5 NTP
