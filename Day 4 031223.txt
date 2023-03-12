@@ -1,0 +1,359 @@
+Day4: Fundamentals of cyber security
+
+Task1: Job interview answer/CCNA 18%
+NetEng, CyberOPs, Cyber Analyst:
+
+Task2: The 3rd Lab on EXAM!
+ssh secure shell:
+
+!!Switch
+Conf t
+ip domain-name rivanit.com
+crypto key generate rsa
+
+512 = secure, 1024 = very secure
+
+ip ssh version 2
+
+Task3: how to get perfect score on the ccna lab
+skill develop
+dhcp, nat, access-list, ssh, N.T.P:
+
+!!VMWARE
+config t
+no login-console
+int g 0/0/3
+ip add dhcp
+no shut
+
+Task4: master DHCP with linux Clients:
+@perfectlab:
+
+config t
+int gi 1
+ip add 192.168.101.7 255.255.255.0
+des DITOkabitlinux1
+no shut
+int gi 2
+ip add 192.168.102.7 255.255.255.0
+des DITOkabitlinux2
+no shut
+
+@dhcpserver for linux1
+conf t
+ip dhcp excluded-add 192.168.101.1 192.168.101.20
+ip dhcp excluded-add 192.168.102.1 192.168.102.20
+ip dhcp pool LINUX1:
+network 192.168.101.0 255.255.255.0
+default-router 192.168.101.7
+domain-name linux2.com
+dns-server 8.8.8.8
+
+ip dhcp pool LINUX2:
+network 192.168.102.0 255.255.255.0
+default-router 192.168.102.7
+domain-name linux2.com
+dns-server 8.8.8.8
+
+Task5: Second lab on the exam access control list.
+standard access-list: Deny entire ip address block:
+block all the IPaddress of "EvilCountries"
+blocked IP's
+russia
+china
+north korea
+
+ex1: use standard acl to block 3 pornsites
+pornhub.com = 66.254.114.0
+bangbus.com = 68.169.96.0
+iyottube.com = 68.235.37.0
+
+conf t
+no access-list 1
+access-list 1 deny 66.254.114.0 0.0.0.255
+access-list 1 deny 68.169.96.0 0.0.0.255
+access-list 1 deny 68.235.37.0 0.0.0.255
+access-list 1 permit any
+int g 3 
+ip access-group 1 in
+end
+
+@@ex2
+mapua.edu.ph = 104.18.25.0
+feu.edu.ph = 104.238.73.0
+
+no access-list 2
+access-list 2 deny 104.18.0.0 0.0.255.255
+access-list 2 deny 104.238.0.0 0.0.255.255
+access-list 2 permit any
+int g 3 
+ip access-group 2 in
+end
+
+@@ex3
+www.army.mil.ph = 34.120.176.214
+www.paf.mil.ph = 202.138.179.137
+www.navy.mil.ph = 58.71.46.41
+
+no access-list 3
+access-list 3 deny 34.120.176.0 0.0.0.255
+access-list 3 deny 202.138.179.0 0.0.0.255
+access-list 3 permit any
+int g 3 
+ip access-group 3 in
+
+special lab on exam:
+PC:
+Linux1:
+Linux2:
+make standard access-list to block the 2 linuxPCs
+from access-list perfectlab
+
+@@configure
+conf t
+no access-list 5
+access-list 5 deny 192.168.101.121
+access-list 5 deny 192.168.102.121
+access-list 5 permit any
+
+line vty 0 20
+access-class 5 in
+do sh access-list 5
+
+Task6: starting a carrer in cybersecurity:
+website = 80, 443, 8080, 2000
+more ports open = more hackable/vulnerable
+nmap -Pnv www.bulsu.edu.ph
+nmap -Pnv www.arellano.edu.ph
+nmap -Pnv www.ccp.edu.ph
+
+template to protect layer3/layer4:
+
+pc:
+cmd ping 192.168.101.7
+cmd ping 192.168.102.7
+
+@PERFECTLAB:
+conf t
+ip host www.web1.com.ph 192.168.101.7
+ip host www.web2.com.ph 192.168.102.7
+
+%WinDir%\System32\Drivers\Etc
+
+Task7: how to start a career in cyber security.
+1. pass ccna bec. it gave fundamentals
+nmap -sP 110.34.166.0/24
+2. Learn how to make cisco very vulnerable and learn to protect it.
+before:
+CMD: nmap -v www.web1.com.ph
+CMD: nmap -v www.web2.com.ph
+
+@how to geet fired command: make cisco hackable.
+
+config t
+service finger
+service tcp-small-servers
+service udp-small-servers
+ip dns server
+
+@new ports address for hacking
+PORT    STATE SERVICE
+7/tcp   open  echo
+9/tcp   open  discard
+13/tcp  open  daytime
+19/tcp  open  chargen
+22/tcp  open  ssh
+23/tcp  open  telnet
+53/tcp  open  domain
+79/tcp  open  finger
+80/tcp  open  http
+443/tcp open  https
+
+@how to make packetfilter firewall:
+formula: protocol hacker victim port
+(TSP, UDP, ICMP, IP)
+ex.1: create a firewall policy so that only port 80, 23 is open on www.web1.com.ph = 2 lines &
+port 53, 443 is open on www.web2.com.ph = 2 lines.
+
+!!PERFECTLAB
+conf t
+no access-list 100
+access-list 100 permit icmp any host www.web1.com.ph
+access-list 100 permit tcp any host www.web1.com.ph Eq 80
+access-list 100 permit tcp any host www.web1.com.ph Eq 23
+access-list 100 permit tcp any host www.web2.com.ph Eq 53
+access-list 100 permit tcp any host www.web2.com.ph Eq 443
+
+int g1
+ip access-group 100 in
+
+int g2
+ip access-group 100 in
+
+do sh ip access-list 100
+
+ex.2: remove the policy on g1 and g2:
+
+int g1
+no ip access-group 100 in
+
+int g2
+no ip access-group 100 in
+
+do sh ip access-list 100
+
+ex.3: make acl 102 to allow these:
+ports 22, 23, 80 is open on www.web1.com.ph
+ports 53, 13, 19, and ping is open at www.web2.com.ph
+
+conf t
+int g1
+ip access-group 102 in
+
+int g2
+ip access-group 102 in
+access-list 102 permit tcp any host www.web1.com.ph Eq 22
+access-list 102 permit tcp any host www.web1.com.ph Eq 80
+access-list 102 permit tcp any host www.web1.com.ph Eq 23
+access-list 102 permit icmp any host www.web2.com.ph
+access-list 102 permit tcp any host www.web2.com.ph Eq 53
+access-list 102 permit tcp any host www.web2.com.ph Eq 13
+access-list 102 permit tcp any host www.web2.com.ph Eq 19
+
+ex.4: make acl 103 to allow these:
+ports 22, 23, 80 is open on www.web2.com.ph
+ports 53, 13, 19, and ping is open at www.web1.com.ph
+
+int g1
+no ip access-group 103 in
+
+int g2
+no ip access-group 103 in
+
+access-list 103 permit icmp any host www.web1.com.ph
+access-list 103 permit tcp any host www.web2.com.ph Eq 22
+access-list 103 permit tcp any host www.web2.com.ph Eq 80
+access-list 103 permit tcp any host www.web2.com.ph Eq 23
+access-list 103 permit tcp any host www.web1.com.ph Eq 53
+access-list 103 permit tcp any host www.web1.com.ph Eq 13
+access-list 103 permit tcp any host www.web1.com.ph Eq 19
+
+ex.6: create policy 104 to meet this condition:
+www.web1.com.ph needs web access only and www.web2.com.ph needs ping, secure web
+and dns to be accessible.
+
+int g1
+ip access-group 104 in
+
+int g2
+ip access-group 104 in
+
+access-list 104 permit tcp any host www.web1.com.ph eq 80
+access-list 104 permit icmp any host www.web2.com.ph
+access-list 104 permit tcp any host www.web2.com.ph Eq 53
+access-list 104 permit tcp any host www.web2.com.ph Eq 443
+
+ex.7: use vmware for linux1b, linux1c
+give static ip to linux:
+
+sudo ifconfig eth0 192.168.101.22 netmask 255.255.255.0. up
+sudo route add default gw 192.168.101.7
+
+int g1
+ip access-group 107 in
+
+int g2
+ip access-group 107 in
+
+no access-list 107
+
+access-list 107 permit icmp host 192.168.101.1 host 192.168.101.7
+access-list 107 permit tcp host 192.168.101.1 host 192.168.101.7 eq 80
+access-list 107 permit tcp host 192.168.101.1 host 192.168.101.7 eq 23
+
+access-list 107 permit icmp host 192.168.101.21 host 192.168.101.7
+access-list 107 permit tcp host 192.168.101.21 host 192.168.101.7 Eq 443
+
+access-list 107 permit tcp host 192.168.101.22 host 192.168.101.7 Eq 23
+access-list 107 permit tcp host 192.168.101.22 host 192.168.101.7 Eq 80
+
+access-list 107 permit tcp host 192.168.101.23 host 192.168.101.7 Eq 22
+
+get index.htm
+
+Task8: 
+standard ACL = 1 - 99 	vs 	Extended ACL = 100 - 199
+permit/deny: IP 		permit/deny: IP and PORTS
+block entire countries 		protect hosts/websites.
+
+config t
+no access-list 108
+
+int gi1
+ip access-group 108
+
+int gi2
+ip access-group 108
+access-list 108 permit tcp host 192.168.101.1 host 192.168.101.7 eq 
+access-list 108 permit tcp host 192.168.101.1 host 192.168.101.7 eq 80
+access-list 108 permit tcp host 192.168.101.1 host 192.168.101.7 eq 23
+
+access-list 108 permit icmp host 192.168.101.21 host 192.168.101.7
+access-list 108 permit tcp host 192.168.101.21 host 192.168.101.7 Eq 443
+
+access-list 108 permit tcp host 192.168.101.22 host 192.168.101.7 Eq 23
+access-list 108 permit tcp host 192.168.101.22 host 192.168.101.7 Eq 80
+
+access-list 108 permit tcp host 192.168.101.23 host 192.168.101.7 Eq 80
+access-list 108 permit tcp host 192.168.101.23 host 192.168.101.7 Eq 443
+
+Task9: The 3rd lab on the exam:
+Network Address Translation: 1 Public IPaddress to share to many devices:
+
+Step1: confgure internet connection:
+@PERFECTLAB
+
+conf t
+int g3
+ip add 192.168.101.7 255.255.255.0
+ip route 0.0.0.0 0.0.0.0 192.168.108.2
+do ping 8.8.8.8
+do ping www.nba.com
+
+Step2: define standard ACL to allow internal:
+conf t
+no access-list 88
+access-list 88 permit 192.168.101.0 0.0.0.255
+access-list 88 permit 192.168.102.0 0.0.0.255
+
+Step3: create a NAT tool with overload and static NAT:
+conf t
+ip nat inside source list 88 interface g3 overload
+ip nat inside source static 192.168.101.21 192.168.108.21
+ip nat inside source static 192.168.101.22 192.168.108.22
+
+int g3
+ip nat outside
+int g1
+ip nat inside
+int g2
+ip nat inside
+end
+
+Task10: AFAM vs AMWF: 
+how to configure the right time zone in cisco:
+Network time protocol
+
+@PERFECTLAB
+conf t
+clock timezone Asia/Manila 8
+ntp server time.google.com prefer
+end
+sh ntp association
+
+5 Lab in april
+1 dhcp
+2 acl, extended
+3 ssh lab
+4 NAT
+5 NTP
