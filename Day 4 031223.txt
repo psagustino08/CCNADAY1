@@ -357,3 +357,11 @@ sh ntp association
 3 ssh lab
 4 NAT
 5 NTP
+6 python in cisco
+7 linux in cisco
+Task11: how to be a network End pero meron pusong programmer.= NetDevOps.
+Step1: github.com
+
+Step2: use git clone
+
+git clone https://github.com/rivancorp/encord1
